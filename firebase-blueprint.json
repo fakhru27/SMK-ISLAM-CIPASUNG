@@ -1,0 +1,133 @@
+{
+  "entities": {
+    "ppdbApplicants": {
+      "title": "Data Pendaftar PPDB & Berkas Dokumen",
+      "description": "Berkas pendaftaran PPDB, verifikasi dokumen ijazah, KK, akta, dan foto pendaftar",
+      "type": "document",
+      "schema": {
+        "id": "string",
+        "registrationNo": "string",
+        "nisn": "string",
+        "nik": "string",
+        "fullName": "string",
+        "gender": "string",
+        "birthPlace": "string",
+        "birthDate": "string",
+        "originSchool": "string",
+        "address": "string",
+        "parentName": "string",
+        "parentPhone": "string",
+        "selectedMajor": "string",
+        "secondMajor": "string",
+        "status": "string",
+        "registrationDate": "string",
+        "documentsUploaded": "map",
+        "notes": "string"
+      }
+    },
+    "studentRecords": {
+      "title": "Data Induk Siswa",
+      "description": "Data induk siswa, status akademik, persentase kehadiran",
+      "type": "document",
+      "schema": {
+        "id": "string",
+        "nis": "string",
+        "nisn": "string",
+        "fullName": "string",
+        "classGrade": "string",
+        "majorId": "string",
+        "parentName": "string",
+        "parentPhone": "string",
+        "gender": "string",
+        "attendanceRate": "number",
+        "academicStatus": "string",
+        "avatarUrl": "string"
+      }
+    },
+    "invoices": {
+      "title": "Data Tagihan & Pembayaran SPP / Berkas Keuangan",
+      "description": "Tagihan SPP, bukti transaksi, QRIS, Virtual Account, dan verifikasi admin",
+      "type": "document",
+      "schema": {
+        "id": "string",
+        "invoiceNo": "string",
+        "studentId": "string",
+        "studentName": "string",
+        "nis": "string",
+        "classGrade": "string",
+        "monthPeriod": "string",
+        "feeType": "string",
+        "amount": "number",
+        "dueDate": "string",
+        "status": "string",
+        "paymentMethod": "string",
+        "paymentDate": "string",
+        "virtualAccount": "string",
+        "receiptNo": "string"
+      }
+    },
+    "elearning": {
+      "title": "Berkas Modul & Materi Pembelajaran",
+      "description": "Dokumen modul praktikum PDF, materi pelajaran, dan lembar tugas digital",
+      "type": "document",
+      "schema": {
+        "id": "string",
+        "category": "string",
+        "title": "string",
+        "teacher": "string",
+        "size": "string",
+        "fileUrl": "string",
+        "createdAt": "string"
+      }
+    },
+    "news": {
+      "title": "Berita, Pengumuman & Berkas Artikel",
+      "description": "Arsip berita sekolah, rilis pengumuman, dan artikel pers sekolah",
+      "type": "document",
+      "schema": {
+        "id": "string",
+        "title": "string",
+        "slug": "string",
+        "category": "string",
+        "excerpt": "string",
+        "content": "string",
+        "imageUrl": "string",
+        "date": "string",
+        "author": "string"
+      }
+    },
+    "events": {
+      "title": "Jadwal & Agenda Kalender Sekolah",
+      "description": "Berkas agenda akademik, ujian, dan kegiatan ekstrakurikuler",
+      "type": "document",
+      "schema": {
+        "id": "string",
+        "title": "string",
+        "category": "string",
+        "date": "string",
+        "time": "string",
+        "location": "string",
+        "description": "string",
+        "status": "string",
+        "organizer": "string"
+      }
+    },
+    "bkkJobs": {
+      "title": "Berkas Lowongan Kerja BKK & Prakerin",
+      "description": "Informasi lowongan kerja alumni BKK dan lowongan PKL industri",
+      "type": "document",
+      "schema": {
+        "id": "string",
+        "title": "string",
+        "companyName": "string",
+        "majorRequirement": "string",
+        "jobType": "string",
+        "location": "string",
+        "deadline": "string",
+        "status": "string",
+        "contactPhone": "string",
+        "description": "string"
+      }
+    }
+  }
+}

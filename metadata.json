@@ -1,0 +1,8 @@
+{
+  "name": "Remix: SMK Islam Cipasung",
+  "description": "Website resmi SMK Islam Cipasung Singaparna Tasikmalaya dengan PPDB Online, Portal Akademik, Notifikasi Otomatis Orang Tua, Pembayaran Digital SPP, Galeri Kegiatan, Chatbot AI Assistant, dan Panel Admin Responsif. ",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
