@@ -61,14 +61,56 @@ import {
 } from './types';
 
 export function App() {
-  const [activeTab, setActiveTab] = useState<string>('beranda');
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    const hash = window.location.hash.replace('#', '').trim();
+    if (hash) return hash;
+    const saved = localStorage.getItem('cipasung_active_tab');
+    return saved || 'beranda';
+  });
+
   const [isAiOpen, setIsAiOpen] = useState<boolean>(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
-  const [currentUser, setCurrentUser] = useState<UserSession>({
-    role: 'umum',
-    name: 'Tamu / Umum',
-    emailOrNis: 'umum',
+
+  const [currentUser, setCurrentUser] = useState<UserSession>(() => {
+    const saved = localStorage.getItem('cipasung_user_session');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error('Failed to restore user session:', e);
+      }
+    }
+    return {
+      role: 'umum',
+      name: 'Tamu / Umum',
+      emailOrNis: 'umum',
+    };
   });
+
+  // Sync activeTab with localStorage & URL Hash so page reload stays on active tab
+  useEffect(() => {
+    localStorage.setItem('cipasung_active_tab', activeTab);
+    if (window.location.hash !== `#${activeTab}`) {
+      window.history.replaceState(null, '', `#${activeTab}`);
+    }
+  }, [activeTab]);
+
+  // Listen for browser Back/Forward or manual URL hash changes
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '').trim();
+      if (hash) {
+        setActiveTab(hash);
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  // Sync currentUser session with localStorage
+  useEffect(() => {
+    localStorage.setItem('cipasung_user_session', JSON.stringify(currentUser));
+  }, [currentUser]);
 
   // Core Persistent State
   const [schoolInfo, setSchoolInfo] = useState<SchoolInfoData>(() => {
