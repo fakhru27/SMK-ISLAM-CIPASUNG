@@ -521,6 +521,7 @@ export function App() {
         isAiOpen={isAiOpen}
         currentUser={currentUser}
         onOpenLoginModal={() => setIsLoginModalOpen(true)}
+        schoolInfo={schoolInfo}
         onLogout={() =>
           setCurrentUser({
             role: 'umum',
@@ -712,7 +713,7 @@ export function App() {
       />
 
       {/* Global Footer */}
-      <Footer setActiveTab={setActiveTab} />
+      <Footer setActiveTab={setActiveTab} schoolInfo={schoolInfo} />
     </div>
   );
 }

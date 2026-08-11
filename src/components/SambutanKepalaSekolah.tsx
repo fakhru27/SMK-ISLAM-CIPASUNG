@@ -50,11 +50,8 @@ export const SambutanKepalaSekolah: React.FC<SambutanProps> = ({ onOpenPpdb, onO
           </p>
         </div>
 
-        {/* Main Content Box with Animated Glowing Border Frame */}
-        <div className="relative group p-[2px] rounded-[32px] overflow-hidden shadow-2xl">
-          {/* Animated Rotating Border Beam */}
-          <div className="absolute inset-[-250%] animate-spin-border bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_60%,#f59e0b_75%,#38bdf8_85%,#fef08a_95%,#ffffff_100%)] pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity" />
-
+        {/* Main Content Box */}
+        <div className="relative group p-[2px] bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-400 rounded-[32px] shadow-2xl">
           {/* Inner Content Glass Container */}
           <div className="relative z-10 bg-slate-900/90 backdrop-blur-xl rounded-[30px] p-6 sm:p-8 lg:p-12 border border-slate-800 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             

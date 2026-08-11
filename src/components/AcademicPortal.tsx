@@ -29,6 +29,8 @@ import {
   PlusCircle,
   Trash2,
   Edit,
+  Image as ImageIcon,
+  Eye,
 } from 'lucide-react';
 import { StudentRecord, GradeItem, AttendanceItem, InvoiceItem } from '../types';
 import { UserSession } from './LoginModal';
@@ -67,9 +69,17 @@ export const AcademicPortal: React.FC<AcademicPortalProps> = ({
   onSwitchRole,
 }) => {
   const [selectedStudentId, setSelectedStudentId] = useState<string>(students[0]?.id || 'STD-2025-01');
-  const [activePortalTab, setActivePortalTab] = useState<'rapor' | 'presensi' | 'spp' | 'jadwal' | 'elearning' | 'walikelas'>(
-    currentUser?.role === 'walikelas' ? 'walikelas' : 'rapor'
-  );
+  const [activePortalTab, setActivePortalTab] = useState<'rapor' | 'presensi' | 'spp' | 'jadwal' | 'elearning' | 'walikelas'>(() => {
+    const saved = localStorage.getItem('cipasung_portal_subtab');
+    if (saved) return saved as any;
+    return currentUser?.role === 'walikelas' ? 'walikelas' : 'rapor';
+  });
+
+  React.useEffect(() => {
+    localStorage.setItem('cipasung_portal_subtab', activePortalTab);
+  }, [activePortalTab]);
+
+  const [selectedReceiptInvoice, setSelectedReceiptInvoice] = useState<InvoiceItem | null>(null);
 
   // Sync state for grades map to ensure instant recalculation of average
   const [localGradesMap, setLocalGradesMap] = useState<Record<string, GradeItem[]>>(gradesMap);
@@ -980,27 +990,37 @@ export const AcademicPortal: React.FC<AcademicPortalProps> = ({
                           Rp {inv.amount.toLocaleString('id-ID')}
                         </span>
 
-                        {inv.status !== 'Lunas' && (
-                          <div className="flex flex-col sm:flex-row gap-2">
-                            {isAuthorized && onUpdateInvoiceStatus && (
-                              <button
-                                onClick={() => onUpdateInvoiceStatus(inv.id, 'Lunas', 'Konfirmasi Langsung Wali Kelas / Admin')}
-                                className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs transition cursor-pointer shadow-xs flex items-center justify-center gap-1"
-                              >
-                                <Check className="w-3.5 h-3.5" /> Konfirmasi Lunas (Wali Kelas / Admin)
-                              </button>
-                            )}
+                        <div className="flex flex-wrap items-center justify-start sm:justify-end gap-2">
+                          <button
+                            onClick={() => setSelectedReceiptInvoice(inv)}
+                            className="px-3 py-1.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-950 font-bold text-xs transition cursor-pointer flex items-center justify-center gap-1.5 border border-emerald-300 shadow-2xs"
+                            title="Lihat Kuitansi & Resi Pembayaran Digital Wali Siswa"
+                          >
+                            <FileText className="w-3.5 h-3.5 text-emerald-700" /> Lihat Resi Pembayaran
+                          </button>
 
-                            {onUpdateInvoiceStatus && (
-                              <button
-                                onClick={() => onUpdateInvoiceStatus(inv.id, 'Lunas', 'QRIS BSI Syariah (Portal Siswa)')}
-                                className="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 font-bold text-xs transition cursor-pointer shadow-xs"
-                              >
-                                Bayar Lunas Siswa
-                              </button>
-                            )}
-                          </div>
-                        )}
+                          {inv.status !== 'Lunas' && (
+                            <>
+                              {isAuthorized && onUpdateInvoiceStatus && (
+                                <button
+                                  onClick={() => onUpdateInvoiceStatus(inv.id, 'Lunas', 'Konfirmasi Langsung Wali Kelas / Admin')}
+                                  className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs transition cursor-pointer shadow-xs flex items-center justify-center gap-1"
+                                >
+                                  <Check className="w-3.5 h-3.5" /> Konfirmasi Lunas (Wali Kelas / Admin)
+                                </button>
+                              )}
+
+                              {onUpdateInvoiceStatus && (
+                                <button
+                                  onClick={() => onUpdateInvoiceStatus(inv.id, 'Lunas', 'QRIS BSI Syariah (Portal Siswa)')}
+                                  className="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 font-bold text-xs transition cursor-pointer shadow-xs"
+                                >
+                                  Bayar Lunas Siswa
+                                </button>
+                              )}
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))
@@ -1897,6 +1917,180 @@ export const AcademicPortal: React.FC<AcademicPortalProps> = ({
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+        {/* MODAL KUITANSI & RESI PEMBAYARAN DIGITAL SAH */}
+        {selectedReceiptInvoice && (
+          <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+            <div className="bg-white rounded-3xl border-2 border-emerald-500 max-w-3xl w-full p-6 space-y-6 shadow-2xl relative text-slate-800 my-8">
+              <button
+                onClick={() => setSelectedReceiptInvoice(null)}
+                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center font-black cursor-pointer transition"
+              >
+                ✕
+              </button>
+
+              {/* Header Kuitansi Resmi */}
+              <div className="border-b-2 border-emerald-500/30 pb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-emerald-50/60 -mx-6 -mt-6 p-6 rounded-t-3xl">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-black shadow-md">
+                    <FileText className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <span className="text-[11px] font-black text-emerald-800 uppercase tracking-widest block">
+                      SMK ISLAM CIPASUNG • BENDUM KEUANGAN
+                    </span>
+                    <h3 className="text-xl font-black text-slate-900">Kuitansi &amp; Resi Pembayaran Digital</h3>
+                    <p className="text-xs text-slate-600 font-mono font-bold">
+                      No. Resi: <span className="text-emerald-700">{selectedReceiptInvoice.receiptNo || `KWT/2026/07/${selectedReceiptInvoice.nis}`}</span>
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span
+                    className={`px-3.5 py-1.5 rounded-full text-xs font-black tracking-wider uppercase border shadow-2xs inline-block ${
+                      selectedReceiptInvoice.status === 'Lunas'
+                        ? 'bg-emerald-600 text-white border-emerald-700 shadow-emerald-200'
+                        : selectedReceiptInvoice.status === 'Menunggu Verifikasi'
+                        ? 'bg-amber-500 text-white border-amber-600 animate-pulse'
+                        : 'bg-slate-800 text-white border-slate-900'
+                    }`}
+                  >
+                    {selectedReceiptInvoice.status === 'Lunas' ? '✓ LUNAS TERVERIFIKASI' : selectedReceiptInvoice.status}
+                  </span>
+                  <span className="text-[10px] text-slate-500 block mt-1 font-medium">Tgl Tagihan: {selectedReceiptInvoice.dueDate}</span>
+                </div>
+              </div>
+
+              {/* Content Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                {/* Left Column: Image Preview / Struk Transfer */}
+                <div className="md:col-span-5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-black text-slate-800 uppercase tracking-wide flex items-center gap-1.5">
+                      <ImageIcon className="w-4 h-4 text-emerald-600" /> Struk Transfer Wali:
+                    </p>
+                  </div>
+
+                  <div className="relative rounded-2xl border-2 border-slate-200 overflow-hidden bg-slate-950 group shadow-inner">
+                    <img
+                      src={selectedReceiptInvoice.paymentProofUrl || 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&auto=format&fit=crop&q=80'}
+                      alt="Struk Resi Pembayaran Wali Siswa"
+                      className="w-full h-72 object-cover object-top transition duration-300 group-hover:scale-105"
+                    />
+                    <a
+                      href={selectedReceiptInvoice.paymentProofUrl || 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&auto=format&fit=crop&q=80'}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="absolute bottom-3 right-3 bg-slate-900/90 text-amber-300 px-3 py-1.5 rounded-xl text-[11px] font-black border border-amber-400/40 flex items-center gap-1.5 shadow-md hover:bg-slate-950"
+                    >
+                      <Eye className="w-3.5 h-3.5" /> Fullscreen
+                    </a>
+                  </div>
+                  <p className="text-[10px] text-slate-500 text-center font-medium italic">
+                    *Bukti resi transfer sah Wali Siswa yang terverifikasi di database sekolah.
+                  </p>
+                </div>
+
+                {/* Right Column: Transaction & Guardian (Wali) Details */}
+                <div className="md:col-span-7 space-y-4 text-xs">
+                  {/* Section Wali Siswa */}
+                  <div>
+                    <h4 className="text-xs font-black text-slate-800 uppercase tracking-wide border-b border-slate-200 pb-1 mb-2 flex items-center justify-between">
+                      <span>Data Wali Siswa / Pengirim</span>
+                      <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 font-bold">Terverifikasi</span>
+                    </h4>
+
+                    <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2 font-medium">
+                      <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
+                        <span className="text-slate-500">Nama Wali / Pengirim:</span>
+                        <strong className="text-slate-900 font-extrabold">{selectedReceiptInvoice.paymentSenderName || 'Wali Santri'}</strong>
+                      </div>
+
+                      <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
+                        <span className="text-slate-500">Bank / Channel Pengirim:</span>
+                        <strong className="text-emerald-800 font-bold">{selectedReceiptInvoice.paymentBankSender || selectedReceiptInvoice.paymentMethod || 'Transfer Virtual Account BSI'}</strong>
+                      </div>
+
+                      <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
+                        <span className="text-slate-500">Waktu Pembayaran:</span>
+                        <span className="text-slate-800 font-bold">{selectedReceiptInvoice.paymentDate || '05 Juli 2026 09:15 WIB'}</span>
+                      </div>
+
+                      {selectedReceiptInvoice.paymentNotes && (
+                        <div className="pt-1 text-[11px] text-slate-600">
+                          <span className="text-slate-500 block">Catatan Transfer Wali:</span>
+                          <p className="italic bg-white p-2 rounded-lg border border-slate-200 mt-1 text-slate-800">{selectedReceiptInvoice.paymentNotes}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Section Siswa & Tagihan */}
+                  <div>
+                    <h4 className="text-xs font-black text-slate-800 uppercase tracking-wide border-b border-slate-200 pb-1 mb-2">
+                      Detail Siswa &amp; Tagihan SPP
+                    </h4>
+
+                    <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2 font-medium">
+                      <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
+                        <span className="text-slate-500">Nama Siswa:</span>
+                        <strong className="text-slate-900">{selectedReceiptInvoice.studentName}</strong>
+                      </div>
+
+                      <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
+                        <span className="text-slate-500">NIS / Kelas:</span>
+                        <strong className="text-slate-900">{selectedReceiptInvoice.nis} • {selectedReceiptInvoice.classGrade}</strong>
+                      </div>
+
+                      <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
+                        <span className="text-slate-500">Jenis &amp; Periode:</span>
+                        <strong className="text-slate-900">{selectedReceiptInvoice.feeType} ({selectedReceiptInvoice.monthPeriod})</strong>
+                      </div>
+
+                      <div className="flex justify-between pt-1 items-center">
+                        <span className="text-slate-700 font-bold">Total Nominal:</span>
+                        <strong className="text-emerald-700 font-black text-base">Rp {selectedReceiptInvoice.amount.toLocaleString('id-ID')}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer Action Buttons */}
+              <div className="pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs flex items-center justify-center gap-2 cursor-pointer transition shadow-md"
+                  >
+                    <Printer className="w-4 h-4 text-emerald-400" /> Cetak Kuitansi PDF
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const msg = `Halo Bapak/Ibu Wali dari ${selectedReceiptInvoice.studentName}, Kuitansi Resi Pembayaran SPP bulan ${selectedReceiptInvoice.monthPeriod} sejumlah Rp ${selectedReceiptInvoice.amount.toLocaleString('id-ID')} telah LUNAS terverifikasi oleh Bendahara SMK Islam Cipasung. No. Resi: ${selectedReceiptInvoice?.receiptNo || 'KWT/2026/07/001'}. Terima kasih.`;
+                      window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+                    }}
+                    className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-950 font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer transition border border-emerald-300"
+                  >
+                    <Send className="w-4 h-4 text-emerald-700" /> Bagikan Ke WA Wali
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedReceiptInvoice(null)}
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs cursor-pointer border border-slate-300"
+                  >
+                    Tutup Kuitansi
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}

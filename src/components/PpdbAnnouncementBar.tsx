@@ -14,11 +14,8 @@ export const PpdbAnnouncementBar: React.FC<PpdbAnnouncementBarProps> = ({ onOpen
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="group relative p-[1.5px] rounded-2xl overflow-hidden shadow-md"
+          className="group relative p-[2px] bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 rounded-2xl shadow-md"
         >
-          {/* Animated Rotating Border Beam */}
-          <div className="absolute inset-[-250%] animate-spin-border bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_65%,#f59e0b_78%,#06b6d4_88%,#fef08a_95%,#ffffff_100%)] pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity" />
-
           <div className="relative z-10 bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 text-slate-100 rounded-[14px] p-2.5 sm:px-4 sm:py-2.5 flex flex-wrap items-center justify-between border border-blue-700/60 gap-2 text-xs font-semibold">
             <div className="flex items-center gap-2 overflow-hidden">
               <span className="flex h-2.5 w-2.5 relative">

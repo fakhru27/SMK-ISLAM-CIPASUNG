@@ -5,6 +5,7 @@ interface LogoProps {
   size?: number;
   showText?: boolean;
   lightText?: boolean;
+  logoUrl?: string;
 }
 
 /**
@@ -24,7 +25,28 @@ export const LogoSmk: React.FC<LogoProps> = ({
   size = 44,
   showText = true,
   lightText = false,
+  logoUrl,
 }) => {
+  if (logoUrl) {
+    return (
+      <div className={`inline-flex items-center gap-3 ${className}`}>
+        <div className="relative shrink-0 flex items-center justify-center overflow-hidden rounded-xl" style={{ width: size, height: size }}>
+          <img src={logoUrl} alt="Logo SMK Islam Cipasung" className="w-full h-full object-contain" />
+        </div>
+        {showText && (
+          <div className="flex flex-col leading-tight">
+            <span className={`font-black text-base tracking-tight ${lightText ? 'text-white' : 'text-slate-900'}`}>
+              SMK ISLAM CIPASUNG
+            </span>
+            <span className={`text-[10px] font-bold tracking-wider uppercase ${lightText ? 'text-amber-400' : 'text-emerald-700'}`}>
+              SINGAPARNA - TASIKMALAYA
+            </span>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className={`inline-flex items-center gap-3 ${className}`}>
       <div className="relative shrink-0 flex items-center justify-center" style={{ width: size, height: size }}>

@@ -109,15 +109,12 @@ export const TeacherSlideSection: React.FC<TeacherSlideSectionProps> = ({ teache
           </div>
         </div>
 
-        {/* Main Slide Card with Rotating Edge Beam */}
+        {/* Main Slide Card */}
         <div
-          className="relative group p-[2px] rounded-[32px] overflow-hidden shadow-2xl"
+          className="relative group p-[2px] bg-gradient-to-br from-amber-400 via-sky-400 to-amber-500 rounded-[32px] shadow-2xl"
           onMouseEnter={() => setIsAutoPlay(false)}
           onMouseLeave={() => setIsAutoPlay(true)}
         >
-          {/* Animated Rotating Border Beam */}
-          <div className="absolute inset-[-250%] animate-spin-border bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_60%,#f59e0b_75%,#38bdf8_85%,#fef08a_95%,#ffffff_100%)] pointer-events-none opacity-85 group-hover:opacity-100 transition-opacity" />
-
           {/* Card Inner Grid Content */}
           <div className="relative z-10 bg-slate-900/95 backdrop-blur-xl rounded-[30px] p-6 sm:p-10 border border-slate-800/80 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[460px]">
             

@@ -194,19 +194,16 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, openAiAssistant, curre
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            className="lg:col-span-7 group relative p-[1.5px] rounded-3xl overflow-hidden shadow-2xl flex flex-col justify-between"
+            className="lg:col-span-7 group relative p-[2px] bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-400 rounded-3xl shadow-2xl flex flex-col justify-between"
           >
-            {/* Animated Rotating Border Beam */}
-            <div className="absolute inset-[-250%] animate-spin-border bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_65%,#f59e0b_78%,#06b6d4_88%,#fef08a_95%,#ffffff_100%)] pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity" />
-
-            <div className="relative z-10 w-full h-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 rounded-[22px] p-6 sm:p-8 lg:p-9 border border-slate-800 flex flex-col justify-between space-y-6 overflow-hidden text-white">
+            <div className="relative z-10 w-full h-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 rounded-[22px] p-5 sm:p-8 lg:p-9 border border-slate-800 flex flex-col justify-between space-y-6 overflow-hidden text-white">
               {/* Ambient background glow */}
               <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
               {/* Top Logo Duo Header */}
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4 relative z-10">
-                <LogoSmk size={36} showText={true} lightText={true} />
+                <LogoSmk size={36} showText={true} lightText={true} logoUrl={schoolInfo?.logoUrl} />
                 
                 <div className="flex items-center gap-2">
                   <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-slate-950 text-xs font-black border border-amber-300 shadow-md">
@@ -274,14 +271,11 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, openAiAssistant, curre
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => setActiveTab('ppdb')}
-                  className="relative group p-[2px] rounded-full overflow-hidden shadow-lg shadow-amber-500/20 cursor-pointer w-full sm:w-auto"
+                  className="px-4 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-black text-slate-950 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 rounded-full flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto shadow-lg shadow-amber-500/20 border border-amber-300"
                 >
-                  <div className="absolute inset-[-250%] animate-spin-border bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_60%,#fef08a_80%,#ffffff_100%)] pointer-events-none opacity-90" />
-                  <div className="relative px-4 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-black text-slate-950 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 rounded-full flex items-center justify-center gap-2">
-                    <BookOpen className="w-4 h-4 text-slate-950 shrink-0" />
-                    <span>Daftar PPDB Online 2026</span>
-                    <ArrowRight className="w-3.5 h-3.5 shrink-0" />
-                  </div>
+                  <BookOpen className="w-4 h-4 text-slate-950 shrink-0" />
+                  <span>Daftar PPDB Online 2026</span>
+                  <ArrowRight className="w-3.5 h-3.5 shrink-0" />
                 </motion.button>
 
                 {/* 2. Detail 3 Jurusan */}
@@ -289,13 +283,10 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, openAiAssistant, curre
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => setActiveTab('jurusan')}
-                  className="relative group p-[2px] rounded-full overflow-hidden shadow-md shadow-amber-500/15 cursor-pointer flex-1 sm:flex-initial"
+                  className="px-3.5 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-black text-slate-950 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 rounded-full flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer flex-1 sm:flex-initial shadow-md border border-amber-300"
                 >
-                  <div className="absolute inset-[-250%] animate-spin-border bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_60%,#fef08a_80%,#ffffff_100%)] pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity" />
-                  <div className="relative px-3.5 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-black text-slate-950 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 rounded-full flex items-center justify-center gap-1.5 sm:gap-2">
-                    <GraduationCap className="w-4 h-4 text-slate-950 shrink-0" />
-                    <span>Detail 3 Jurusan</span>
-                  </div>
+                  <GraduationCap className="w-4 h-4 text-slate-950 shrink-0" />
+                  <span>Detail 3 Jurusan</span>
                 </motion.button>
 
                 {/* 3. Bursa Kerja BKK */}
@@ -303,13 +294,10 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, openAiAssistant, curre
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => setActiveTab('jurusan')}
-                  className="relative group p-[2px] rounded-full overflow-hidden shadow-md shadow-amber-500/20 cursor-pointer flex-1 sm:flex-initial"
+                  className="px-3.5 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-black text-slate-950 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 rounded-full flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer flex-1 sm:flex-initial shadow-md border border-amber-300"
                 >
-                  <div className="absolute inset-[-250%] animate-spin-border bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_60%,#fef08a_80%,#ffffff_100%)] pointer-events-none opacity-90 group-hover:opacity-100 transition-opacity" />
-                  <div className="relative px-3.5 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-black text-slate-950 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 rounded-full flex items-center justify-center gap-1.5 sm:gap-2">
-                    <Briefcase className="w-4 h-4 text-slate-950 shrink-0" />
-                    <span>Bursa Kerja (BKK)</span>
-                  </div>
+                  <Briefcase className="w-4 h-4 text-slate-950 shrink-0" />
+                  <span>Bursa Kerja (BKK)</span>
                 </motion.button>
               </div>
 
@@ -339,10 +327,7 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, openAiAssistant, curre
             className="lg:col-span-5 flex flex-col gap-4 justify-between"
           >
             {/* 1. JADWAL SHOLAT & KALENDER HIJRIAH WIDGET */}
-            <div className="group relative p-[1.5px] rounded-3xl overflow-hidden shadow-xl transition-all duration-300">
-              {/* Rotating Glowing Border Beam */}
-              <div className="absolute inset-[-250%] animate-spin-border bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_65%,#f59e0b_78%,#10b981_88%,#fef08a_95%,#ffffff_100%)] pointer-events-none opacity-85 group-hover:opacity-100 transition-opacity" />
-
+            <div className="group relative p-[2px] bg-gradient-to-br from-amber-400 via-emerald-400 to-amber-500 rounded-3xl shadow-xl transition-all duration-300">
               <div className="relative z-10 bg-slate-900/95 backdrop-blur-md p-4 sm:p-5 rounded-[22px] border border-amber-500/40 text-white space-y-3">
                 {/* Header & Hijri Date + Real-time Clock */}
                 <div className="flex items-center justify-between gap-2 border-b border-slate-800/80 pb-2.5">
@@ -415,10 +400,7 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, openAiAssistant, curre
             </div>
 
             {/* 2. SLIDE PROFIL GURU & TENAGA PENDIDIK */}
-            <div className="group relative p-[1.5px] rounded-3xl overflow-hidden shadow-xl transition-all duration-300">
-              {/* Rotating Glowing Border Beam */}
-              <div className="absolute inset-[-250%] animate-spin-border bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_65%,#f59e0b_78%,#06b6d4_88%,#fef08a_95%,#ffffff_100%)] pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity" />
-
+            <div className="group relative p-[2px] bg-gradient-to-br from-amber-400 via-blue-500 to-amber-500 rounded-3xl shadow-xl transition-all duration-300">
               <div className="relative z-10 bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 p-3.5 sm:p-4 rounded-[22px] border border-blue-800/80 text-white space-y-2.5">
                 {/* Header with Nav Controls */}
                 <div className="flex items-center justify-between border-b border-slate-800/80 pb-2">
@@ -515,11 +497,8 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, openAiAssistant, curre
                 </div>
               </div>
             </div>
-            {/* 3. Interactive Image Showcase Card with Motion & Rotating Border Beam */}
-            <div className="group relative p-[1.5px] rounded-3xl overflow-hidden shadow-xl transition-all duration-300">
-              {/* Rotating Glowing Border Beam */}
-              <div className="absolute inset-[-250%] animate-spin-border bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_65%,#f59e0b_78%,#06b6d4_88%,#fef08a_95%,#ffffff_100%)] pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity" />
-
+            {/* 3. Interactive Image Showcase Card with Motion */}
+            <div className="group relative p-[2px] bg-gradient-to-br from-amber-400 via-yellow-400 to-amber-500 rounded-3xl shadow-xl transition-all duration-300">
               <div className="relative z-10 rounded-[22px] overflow-hidden bg-slate-900 border border-slate-700/80 h-64 sm:h-72 lg:h-[300px] flex flex-col justify-between p-4">
                 <AnimatePresence mode="wait">
                   <motion.img
@@ -601,7 +580,7 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, openAiAssistant, curre
 
         </div>
 
-        {/* Key Interactive Statistics Cards with Multi-Color Rotating Border Beam */}
+        {/* Key Interactive Statistics Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 pt-2">
           {[
             { value: schoolInfo?.stats?.totalStudents || '1,240+', label: 'Siswa Aktif Belajar', icon: Users },
@@ -614,11 +593,8 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, openAiAssistant, curre
               <motion.div
                 key={idx}
                 whileHover={{ y: -5, scale: 1.02 }}
-                className="group relative p-[1.5px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl transition-all duration-300 min-w-0"
+                className="group relative p-[2px] bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-400 rounded-2xl sm:rounded-3xl shadow-xl transition-all duration-300 min-w-0"
               >
-                {/* Rotating Glowing Border Beam */}
-                <div className="absolute inset-[-250%] animate-spin-border bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_65%,#f59e0b_78%,#06b6d4_88%,#fef08a_95%,#ffffff_100%)] pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity" />
-
                 <div className="relative z-10 p-3 sm:p-5 rounded-[14px] sm:rounded-[22px] bg-gradient-to-br from-amber-500 via-amber-600 to-yellow-500 flex items-center gap-2.5 sm:gap-4 text-white min-w-0">
                   <div className="p-2 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-950 text-amber-300 border border-slate-900 shrink-0 shadow-md">
                     <StatIcon className="w-4 h-4 sm:w-6 sm:h-6" />
@@ -638,12 +614,9 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, openAiAssistant, curre
         </div>
 
         {/* Quick Shortcut Interactive Grid - Revamped Akses Layanan Digital Utama */}
-        <div className="group relative p-[3.5px] rounded-[32px] overflow-hidden shadow-2xl transition-all">
-          {/* Prominent & Thicker Animated Rotating Multi-Color Border Beam around Main Container */}
-          <div className="absolute inset-[-250%] animate-spin-border bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_45%,#f59e0b_65%,#38bdf8_78%,#f43f5e_88%,#fef08a_95%,#ffffff_100%)] pointer-events-none opacity-100" />
-
+        <div className="group relative p-[3px] bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-400 rounded-[32px] shadow-2xl transition-all">
           {/* Main Soft Elegant Gold/Slate Outer Backdrop ("PUTIH KOTAK") */}
-          <div className="relative z-10 bg-gradient-to-br from-amber-50/90 via-slate-50 to-amber-100/70 rounded-[28px] p-6 sm:p-8 lg:p-10 text-slate-950 space-y-8 overflow-hidden shadow-md border border-amber-200/50">
+          <div className="relative z-10 bg-gradient-to-br from-amber-50/90 via-slate-50 to-amber-100/70 rounded-[28px] p-5 sm:p-8 lg:p-10 text-slate-950 space-y-8 overflow-hidden shadow-md border border-amber-200/50">
             {/* Ambient Soft Glow Orbs */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-amber-200/20 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-amber-300/20 rounded-full blur-3xl pointer-events-none" />
@@ -720,29 +693,27 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, openAiAssistant, curre
                       whileHover={{ y: -6, scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setActiveTab(service.id)}
-                      className="group relative p-[2.5px] rounded-[24px] overflow-hidden shadow-xl transition-all duration-300 cursor-pointer"
+                      className="group relative p-[2px] bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-400 rounded-[24px] shadow-xl transition-all duration-300 cursor-pointer overflow-hidden"
                     >
-                      <div className="absolute inset-[-250%] animate-spin-border bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_50%,#f59e0b_70%,#06b6d4_82%,#fef08a_92%,#ffffff_100%)] pointer-events-none opacity-90 group-hover:opacity-100 transition-opacity" />
-
-                      <div className="relative z-10 w-full h-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 rounded-[22px] p-6 sm:p-7 flex flex-col justify-between text-white border border-slate-800/90 group-hover:border-amber-400/80 transition-colors">
-                        <div className="space-y-4">
+                      <div className="relative z-10 w-full h-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 rounded-[22px] p-4 sm:p-6 lg:p-7 flex flex-col justify-between text-white border border-slate-800/90 group-hover:border-amber-400/80 transition-colors">
+                        <div className="space-y-3 sm:space-y-4">
                           {/* Card Top: Icon & Bold Metallic Sharp Badge */}
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-500 text-slate-950 flex items-center justify-center border-2 border-amber-300 shadow-md group-hover:scale-110 transition-transform duration-300 shrink-0">
-                              <Icon className="w-6 h-6" />
+                          <div className="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-500 text-slate-950 flex items-center justify-center border-2 border-amber-300 shadow-md group-hover:scale-110 transition-transform duration-300 shrink-0">
+                              <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
                             </div>
-                            <span className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider shadow-md border-2 flex items-center gap-1.5 shrink-0 ${service.badgeColor}`}>
-                              <Globe className="w-3.5 h-3.5 shrink-0 text-slate-950" />
+                            <span className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-md border-2 flex items-center gap-1.5 shrink-0 whitespace-nowrap max-w-full overflow-hidden text-ellipsis ${service.badgeColor}`}>
+                              <Globe className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 text-slate-950" />
                               <span>{service.badge}</span>
                             </span>
                           </div>
 
                           {/* Card Main Typography */}
                           <div className="pt-1">
-                            <h3 className="text-xl font-black text-white group-hover:text-amber-300 transition-colors leading-snug">
+                            <h3 className="text-lg sm:text-xl font-black text-white group-hover:text-amber-300 transition-colors leading-snug">
                               {service.title}
                             </h3>
-                            <p className="text-xs sm:text-sm font-medium text-slate-300 leading-relaxed mt-2">
+                            <p className="text-xs sm:text-sm font-medium text-slate-300 leading-relaxed mt-1.5">
                               {service.subtitle}
                             </p>
                           </div>
@@ -752,9 +723,9 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, openAiAssistant, curre
                             {service.features.map((feat, idx) => (
                               <span
                                 key={idx}
-                                className="px-3 py-1 rounded-full text-xs font-extrabold bg-slate-900/90 text-amber-300 border border-slate-800 transition-colors flex items-center gap-1.5 shadow-2xs"
+                                className="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-extrabold bg-slate-900/90 text-amber-300 border border-slate-800 transition-colors flex items-center gap-1 sm:gap-1.5 shadow-2xs"
                               >
-                                <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                                <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400 shrink-0" />
                                 {feat}
                               </span>
                             ))}
@@ -762,12 +733,12 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, openAiAssistant, curre
                         </div>
 
                         {/* Card Bottom CTA Link */}
-                        <div className="pt-5 mt-5 border-t border-slate-800/80 flex items-center justify-between">
+                        <div className="pt-4 mt-4 sm:pt-5 sm:mt-5 border-t border-slate-800/80 flex items-center justify-between">
                           <span className="text-xs sm:text-sm font-black text-amber-300 group-hover:text-amber-200 flex items-center gap-1.5">
                             <span>Buka Layanan Portal</span>
                           </span>
-                          <div className="w-9 h-9 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 text-slate-950 flex items-center justify-center transition-all duration-300 shadow-md border border-amber-300">
-                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 text-slate-950 flex items-center justify-center transition-all duration-300 shadow-md border border-amber-300">
+                            <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
                           </div>
                         </div>
                       </div>
@@ -817,29 +788,27 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, openAiAssistant, curre
                       whileHover={{ y: -6, scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setActiveTab(service.id)}
-                      className="group relative p-[2.5px] rounded-[24px] overflow-hidden shadow-xl transition-all duration-300 cursor-pointer"
+                      className="group relative p-[2px] bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-400 rounded-[24px] shadow-xl transition-all duration-300 cursor-pointer overflow-hidden"
                     >
-                      <div className="absolute inset-[-250%] animate-spin-border bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_50%,#f59e0b_70%,#06b6d4_82%,#fef08a_92%,#ffffff_100%)] pointer-events-none opacity-90 group-hover:opacity-100 transition-opacity" />
-
-                      <div className="relative z-10 w-full h-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 rounded-[22px] p-6 sm:p-7 flex flex-col justify-between text-white border border-slate-800/90 group-hover:border-amber-400/80 transition-colors">
-                        <div className="space-y-4">
+                      <div className="relative z-10 w-full h-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 rounded-[22px] p-4 sm:p-6 lg:p-7 flex flex-col justify-between text-white border border-slate-800/90 group-hover:border-amber-400/80 transition-colors">
+                        <div className="space-y-3 sm:space-y-4">
                           {/* Card Top: Icon & Bold Metallic Sharp Badge */}
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-500 text-slate-950 flex items-center justify-center border-2 border-amber-300 shadow-md group-hover:scale-110 transition-transform duration-300 shrink-0">
-                              <Icon className="w-6 h-6" />
+                          <div className="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-500 text-slate-950 flex items-center justify-center border-2 border-amber-300 shadow-md group-hover:scale-110 transition-transform duration-300 shrink-0">
+                              <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
                             </div>
-                            <span className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider shadow-md border-2 flex items-center gap-1.5 shrink-0 ${service.badgeColor}`}>
-                              <Lock className="w-3.5 h-3.5 shrink-0 text-slate-950" />
+                            <span className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-md border-2 flex items-center gap-1.5 shrink-0 whitespace-nowrap max-w-full overflow-hidden text-ellipsis ${service.badgeColor}`}>
+                              <Lock className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 text-slate-950" />
                               <span>{service.badge}</span>
                             </span>
                           </div>
 
                           {/* Card Main Typography */}
                           <div className="pt-1">
-                            <h3 className="text-xl font-black text-white group-hover:text-amber-300 transition-colors leading-snug">
+                            <h3 className="text-lg sm:text-xl font-black text-white group-hover:text-amber-300 transition-colors leading-snug">
                               {service.title}
                             </h3>
-                            <p className="text-xs sm:text-sm font-medium text-slate-300 leading-relaxed mt-2">
+                            <p className="text-xs sm:text-sm font-medium text-slate-300 leading-relaxed mt-1.5">
                               {service.subtitle}
                             </p>
                           </div>
@@ -849,9 +818,9 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, openAiAssistant, curre
                             {service.features.map((feat, idx) => (
                               <span
                                 key={idx}
-                                className="px-3 py-1 rounded-full text-xs font-extrabold bg-slate-900/90 text-amber-300 border border-slate-800 transition-colors flex items-center gap-1.5 shadow-2xs"
+                                className="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-extrabold bg-slate-900/90 text-amber-300 border border-slate-800 transition-colors flex items-center gap-1 sm:gap-1.5 shadow-2xs"
                               >
-                                <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                                <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400 shrink-0" />
                                 {feat}
                               </span>
                             ))}
@@ -859,12 +828,12 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab, openAiAssistant, curre
                         </div>
 
                         {/* Card Bottom CTA Link */}
-                        <div className="pt-5 mt-5 border-t border-slate-800/80 flex items-center justify-between">
+                        <div className="pt-4 mt-4 sm:pt-5 sm:mt-5 border-t border-slate-800/80 flex items-center justify-between">
                           <span className="text-xs sm:text-sm font-black text-amber-300 group-hover:text-amber-200 flex items-center gap-1.5">
                             <span>Buka Layanan Portal</span>
                           </span>
-                          <div className="w-9 h-9 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 text-slate-950 flex items-center justify-center transition-all duration-300 shadow-md border border-amber-300">
-                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 text-slate-950 flex items-center justify-center transition-all duration-300 shadow-md border border-amber-300">
+                            <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
                           </div>
                         </div>
                       </div>

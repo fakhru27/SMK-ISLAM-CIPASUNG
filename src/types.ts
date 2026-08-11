@@ -171,6 +171,7 @@ export interface SchoolInfoData {
   whatsapp: string;
   email: string;
   principal: string;
+  logoUrl?: string;
   principalPhoto?: string;
   principalMessage?: string;
   principalVideoUrl?: string;

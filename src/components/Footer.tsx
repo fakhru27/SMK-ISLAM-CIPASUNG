@@ -12,11 +12,14 @@ import {
 } from 'lucide-react';
 import { LogoYayasan, LogoSmk } from './Logos';
 
+import { SchoolInfoData } from '../types';
+
 interface FooterProps {
   setActiveTab: (tab: string) => void;
+  schoolInfo?: SchoolInfoData;
 }
 
-export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
+export const Footer: React.FC<FooterProps> = ({ setActiveTab, schoolInfo }) => {
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -29,7 +32,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
           {/* Column 1: School Logo & Description */}
           <div className="space-y-4">
             <div className="flex flex-col gap-3">
-              <LogoSmk size={40} showText={true} lightText={true} />
+              <LogoSmk size={40} showText={true} lightText={true} logoUrl={schoolInfo?.logoUrl} />
             </div>
             <p className="text-xs text-slate-400 leading-relaxed">
               Mewujudkan lulusan vokasi industri unggul yang mahir dalam teknologi modern, berkarakter Islami berpondasikan pesantren, serta siap kerja di era digital nasional.

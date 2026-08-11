@@ -80,37 +80,42 @@ app.post('/api/chat', async (req, res) => {
     const aiClient = getAiClient();
 
     if (aiClient) {
-      // Build conversation contents including history
-      const contents: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = [];
+      try {
+        // Build conversation contents including history
+        const contents: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = [];
 
-      if (Array.isArray(history)) {
-        // Include last 10 turns of conversation history for rich context
-        const recentHistory = history.slice(-10);
-        for (const item of recentHistory) {
-          if (item.sender === 'user' && item.text) {
-            contents.push({ role: 'user', parts: [{ text: String(item.text) }] });
-          } else if (item.sender === 'assistant' && item.text) {
-            contents.push({ role: 'model', parts: [{ text: String(item.text) }] });
+        if (Array.isArray(history)) {
+          // Include last 10 turns of conversation history for rich context
+          const recentHistory = history.slice(-10);
+          for (const item of recentHistory) {
+            if (item.sender === 'user' && item.text) {
+              contents.push({ role: 'user', parts: [{ text: String(item.text) }] });
+            } else if (item.sender === 'assistant' && item.text) {
+              contents.push({ role: 'model', parts: [{ text: String(item.text) }] });
+            }
           }
         }
+
+        // Add current user prompt
+        contents.push({ role: 'user', parts: [{ text: message }] });
+
+        const response = await aiClient.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents,
+          config: {
+            systemInstruction: CIPASUNG_SYSTEM_INSTRUCTION,
+            temperature: 0.7,
+          },
+        });
+
+        const replyText =
+          response.text ||
+          'Afwan, Cipasung AI sedang memproses informasi. Ada hal lain yang bisa saya bantu?';
+        return res.json({ reply: replyText });
+      } catch (geminiError) {
+        console.error('Gemini API call error, falling back to smart responder:', geminiError);
+        // Fallthrough to smart responder below
       }
-
-      // Add current user prompt
-      contents.push({ role: 'user', parts: [{ text: message }] });
-
-      const response = await aiClient.models.generateContent({
-        model: 'gemini-3.6-flash',
-        contents,
-        config: {
-          systemInstruction: CIPASUNG_SYSTEM_INSTRUCTION,
-          temperature: 0.7,
-        },
-      });
-
-      const replyText =
-        response.text ||
-        'Afwan, Cipasung AI sedang memproses informasi. Ada hal lain yang bisa saya bantu?';
-      return res.json({ reply: replyText });
     }
 
     // Smart dynamic fallback if API key is not active in dev container

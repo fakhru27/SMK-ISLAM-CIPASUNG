@@ -109,7 +109,17 @@ interface AdminPanelProps {
   students: StudentRecord[];
   notifications: ParentNotificationItem[];
   onUpdateApplicantStatus: (id: string, status: 'Diterima' | 'Ditolak' | 'Lulus Seleksi') => void;
-  onUpdateInvoiceStatus: (id: string, status: 'Lunas', method: string) => void;
+  onUpdateInvoiceStatus: (
+    id: string,
+    status: 'Lunas' | 'Menunggu Verifikasi',
+    method: string,
+    proofData?: {
+      paymentProofUrl?: string;
+      paymentSenderName?: string;
+      paymentBankSender?: string;
+      paymentNotes?: string;
+    }
+  ) => void;
   currentUser?: UserSession;
   onOpenLoginModal?: () => void;
   schoolInfo?: SchoolInfoData;
@@ -2288,6 +2298,49 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 </div>
               </div>
 
+              {/* Box 1.5: Pengaturan Logo Resmi Sekolah */}
+              <div className="p-5 rounded-2xl bg-blue-50/60 border border-blue-200 space-y-4">
+                <h4 className="text-sm font-black text-blue-950 flex items-center gap-2">
+                  <Image className="w-4 h-4 text-blue-600" /> Logo Resmi SMK Islam Cipasung
+                </h4>
+
+                <div className="space-y-3">
+                  <label className="text-xs font-extrabold text-slate-700 block">Upload Berkas / URL Logo Sekolah:</label>
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                    <label className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black text-xs flex items-center justify-center gap-2 cursor-pointer shadow-sm shrink-0">
+                      <Upload className="w-4 h-4" /> Unggah Logo HP / Galeri
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => handleFileUploadAsDataUrl(e, (url) => onUpdateSchoolInfo && schoolInfo && onUpdateSchoolInfo({ ...schoolInfo, logoUrl: url }))}
+                      />
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Atau URL logo https://..."
+                      value={schoolInfo?.logoUrl || ''}
+                      onChange={(e) => onUpdateSchoolInfo && schoolInfo && onUpdateSchoolInfo({ ...schoolInfo, logoUrl: e.target.value })}
+                      className="flex-1 px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 bg-white"
+                    />
+                  </div>
+                  {schoolInfo?.logoUrl && (
+                    <div className="flex items-center gap-3 pt-1">
+                      <span className="text-xs text-slate-500 font-bold">Pratinjau Logo Custom:</span>
+                      <img src={schoolInfo.logoUrl} alt="Logo Preview" className="w-10 h-10 object-contain rounded-lg border border-slate-300 p-1 bg-white shadow-2xs" />
+                      <button
+                        type="button"
+                        onClick={() => onUpdateSchoolInfo && schoolInfo && onUpdateSchoolInfo({ ...schoolInfo, logoUrl: '' })}
+                        className="text-xs text-red-600 font-bold underline cursor-pointer hover:text-red-700"
+                      >
+                        Reset ke Logo Bawaan Vector
+                      </button>
+                    </div>
+                  )}
+                  <p className="text-[10px] text-slate-500">Logo ini akan otomatis digunakan di Header Navbar, Footer, dan dokumen kuitansi/kartu PPDB.</p>
+                </div>
+              </div>
+
               {/* Box 2: Pengaturan Foto Kepala Sekolah & Pesan */}
               <div className="p-5 rounded-2xl bg-amber-50/50 border border-amber-200 space-y-4">
                 <h4 className="text-sm font-black text-amber-950 flex items-center gap-2">
@@ -2890,18 +2943,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                           {inv.status === 'Menunggu Verifikasi' ? '⏳ Menunggu Verifikasi' : inv.status}
                         </span>
                       </td>
-                      <td className="py-3.5 px-4 text-center space-x-1 space-y-1">
-                        {inv.paymentProofUrl ? (
-                          <button
-                            onClick={() => setSelectedProofInvoice(inv)}
-                            className="bg-blue-100 hover:bg-blue-200 text-blue-900 border border-blue-300 px-2.5 py-1.5 rounded-xl text-xs font-black shadow-2xs inline-flex items-center gap-1 cursor-pointer transition"
-                            title="Inspeksi Struk / Foto Bukti Transfer Wali Santri"
-                          >
-                            <ImageIcon className="w-3.5 h-3.5 text-blue-700" /> Cek Bukti Transfer
-                          </button>
-                        ) : (
-                          <span className="text-slate-400 font-medium text-[11px] italic block py-1">Belum Ada Bukti Transfer</span>
-                        )}
+                      <td className="py-3.5 px-4 text-center space-y-1.5">
+                        <button
+                          onClick={() => setSelectedProofInvoice(inv)}
+                          className="bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300 px-3 py-1.5 rounded-xl text-xs font-black shadow-2xs inline-flex items-center gap-1.5 cursor-pointer transition w-full sm:w-auto justify-center"
+                          title="Lihat Kuitansi & Resi Pembayaran Digital Wali Siswa"
+                        >
+                          <FileText className="w-3.5 h-3.5 text-emerald-700" /> Lihat Resi Pembayaran
+                        </button>
 
                         {inv.status !== 'Lunas' ? (
                           <button
@@ -2909,12 +2958,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                               onUpdateInvoiceStatus(inv.id, 'Lunas', inv.paymentMethod || 'Verifikasi Admin Manual');
                               alert(`✓ Tagihan ${inv.invoiceNo} untuk ${inv.studentName} berhasil Diverifikasi LUNAS!`);
                             }}
-                            className="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-black shadow-2xs transition cursor-pointer"
+                            className="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-black shadow-2xs transition cursor-pointer w-full sm:w-auto block mt-1"
                           >
                             Setujui Lunas
                           </button>
                         ) : (
-                          <span className="text-emerald-700 font-bold text-[11px] block">✓ Terverifikasi Lunas</span>
+                          <span className="text-emerald-700 font-extrabold text-[11px] block mt-0.5">✓ Terverifikasi Lunas</span>
                         )}
                       </td>
                     </tr>
@@ -3270,10 +3319,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         </div>
       )}
 
-      {/* MODAL INSPEKSI BUKTI TRANSFER SPP */}
+      {/* MODAL INSPEKSI & KUITANSI RESI PEMBAYARAN SPP DIGITAL */}
       {selectedProofInvoice && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl border-2 border-blue-400 max-w-2xl w-full p-6 space-y-6 shadow-2xl relative text-slate-800 my-8">
+          <div className="bg-white rounded-3xl border-2 border-emerald-500 max-w-3xl w-full p-6 space-y-6 shadow-2xl relative text-slate-800 my-8">
             <button
               onClick={() => setSelectedProofInvoice(null)}
               className="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center font-black cursor-pointer transition"
@@ -3281,25 +3330,81 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               ✕
             </button>
 
-            <div className="border-b border-slate-100 pb-3 flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-900 flex items-center justify-center font-black">
-                <ImageIcon className="w-6 h-6 text-blue-800" />
+            {/* Header Kuitansi Resmi */}
+            <div className="border-b-2 border-emerald-500/30 pb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-emerald-50/60 -mx-6 -mt-6 p-6 rounded-t-3xl">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-black shadow-md">
+                  <FileText className="w-7 h-7 text-white" />
+                </div>
+                <div>
+                  <span className="text-[11px] font-black text-emerald-800 uppercase tracking-widest block">
+                    SMK ISLAM CIPASUNG • BENDUM KEUANGAN
+                  </span>
+                  <h3 className="text-xl font-black text-slate-900">Kuitansi &amp; Resi Pembayaran Digital</h3>
+                  <p className="text-xs text-slate-600 font-mono font-bold">
+                    No. Resi: <span className="text-emerald-700">{selectedProofInvoice.receiptNo || `KWT/2026/07/${selectedProofInvoice.nis}`}</span>
+                  </p>
+                </div>
               </div>
-              <div>
-                <span className="text-xs font-black text-blue-800 uppercase tracking-wider block">Audit & Inspeksi Keuangan Sekolah</span>
-                <h3 className="text-xl font-black text-slate-900">Bukti Pembayaran SPP / Biaya Pendidikan</h3>
+              <div className="text-right">
+                <span
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-black tracking-wider uppercase border shadow-2xs inline-block ${
+                    selectedProofInvoice.status === 'Lunas'
+                      ? 'bg-emerald-600 text-white border-emerald-700 shadow-emerald-200'
+                      : selectedProofInvoice.status === 'Menunggu Verifikasi'
+                      ? 'bg-amber-500 text-white border-amber-600 animate-pulse'
+                      : 'bg-slate-800 text-white border-slate-900'
+                  }`}
+                >
+                  {selectedProofInvoice.status === 'Lunas' ? '✓ LUNAS TERVERIFIKASI' : selectedProofInvoice.status}
+                </span>
+                <span className="text-[10px] text-slate-500 block mt-1 font-medium">Tgl Tagihan: {selectedProofInvoice.dueDate}</span>
               </div>
             </div>
 
             {/* Content Grid */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-              {/* Left Column: Image Preview */}
-              <div className="md:col-span-6 space-y-3">
-                <p className="text-xs font-bold text-slate-700">Foto / Resi Struk Bukti Transfer:</p>
-                <div className="relative rounded-2xl border-2 border-slate-200 overflow-hidden bg-slate-900 group shadow-inner">
+              {/* Left Column: Image Preview / Struk Transfer */}
+              <div className="md:col-span-5 space-y-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-black text-slate-800 uppercase tracking-wide flex items-center gap-1.5">
+                    <ImageIcon className="w-4 h-4 text-emerald-600" /> Struk Transfer Wali:
+                  </p>
+                  <label className="text-[11px] text-emerald-700 font-bold hover:underline cursor-pointer">
+                    + Upload Foto Resi
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            const newUrl = reader.result as string;
+                            onUpdateInvoiceStatus(
+                              selectedProofInvoice.id,
+                              selectedProofInvoice.status as 'Lunas' | 'Menunggu Verifikasi',
+                              selectedProofInvoice.paymentMethod || 'Unggah Resi Wali',
+                              { paymentProofUrl: newUrl }
+                            );
+                            setSelectedProofInvoice({
+                              ...selectedProofInvoice,
+                              paymentProofUrl: newUrl,
+                            });
+                            alert('✓ Foto Resi Pembayaran Wali Siswa berhasil diperbarui!');
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
+
+                <div className="relative rounded-2xl border-2 border-slate-200 overflow-hidden bg-slate-950 group shadow-inner">
                   <img
                     src={selectedProofInvoice.paymentProofUrl || 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&auto=format&fit=crop&q=80'}
-                    alt="Bukti Transfer SPP"
+                    alt="Struk Resi Pembayaran Wali Siswa"
                     className="w-full h-72 object-cover object-top transition duration-300 group-hover:scale-105"
                   />
                   <a
@@ -3311,69 +3416,98 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     <Eye className="w-3.5 h-3.5" /> Fullscreen
                   </a>
                 </div>
-                <p className="text-[10px] text-slate-500 text-center font-medium">
-                  Pastikan nominal, nomor rekening tujuan sekolah, dan tanggal transfer sesuai.
+                <p className="text-[10px] text-slate-500 text-center font-medium italic">
+                  *Foto struk / resi bukti transfer dari Wali Siswa yang telah tersimpan di server keuangan.
                 </p>
               </div>
 
-              {/* Right Column: Transaction Details */}
-              <div className="md:col-span-6 space-y-3 text-xs">
-                <p className="text-xs font-bold text-slate-700">Rincian Transaksi Wali Santri:</p>
-                
-                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2 font-medium">
-                  <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
-                    <span className="text-slate-500">No. Tagihan:</span>
-                    <strong className="text-blue-900 font-mono">{selectedProofInvoice.invoiceNo}</strong>
-                  </div>
+              {/* Right Column: Transaction & Guardian (Wali) Details */}
+              <div className="md:col-span-7 space-y-4 text-xs">
+                {/* Section Wali Siswa */}
+                <div>
+                  <h4 className="text-xs font-black text-slate-800 uppercase tracking-wide border-b border-slate-200 pb-1 mb-2 flex items-center justify-between">
+                    <span>Data Wali Siswa / Pengirim</span>
+                    <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 font-bold">Terverifikasi</span>
+                  </h4>
 
-                  <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
-                    <span className="text-slate-500">Nama Siswa:</span>
-                    <strong className="text-slate-900">{selectedProofInvoice.studentName} ({selectedProofInvoice.classGrade})</strong>
-                  </div>
+                  <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2 font-medium">
+                    <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
+                      <span className="text-slate-500">Nama Wali / Pengirim:</span>
+                      <strong className="text-slate-900 font-extrabold">{selectedProofInvoice.paymentSenderName || 'Wali Santri'}</strong>
+                    </div>
 
-                  <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
-                    <span className="text-slate-500">Jenis & Periode:</span>
-                    <strong className="text-slate-900">{selectedProofInvoice.feeType} ({selectedProofInvoice.monthPeriod})</strong>
-                  </div>
+                    <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
+                      <span className="text-slate-500">Bank / Channel Pengirim:</span>
+                      <strong className="text-emerald-800 font-bold">{selectedProofInvoice.paymentBankSender || selectedProofInvoice.paymentMethod || 'Transfer Virtual Account BSI'}</strong>
+                    </div>
 
-                  <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
-                    <span className="text-slate-500">Nominal Tagihan:</span>
-                    <strong className="text-emerald-700 font-black text-sm">Rp {selectedProofInvoice.amount.toLocaleString('id-ID')}</strong>
-                  </div>
+                    <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
+                      <span className="text-slate-500">Waktu Pembayaran:</span>
+                      <span className="text-slate-800 font-bold">{selectedProofInvoice.paymentDate || '05 Juli 2026 09:15 WIB'}</span>
+                    </div>
 
-                  <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
-                    <span className="text-slate-500">Metode / Bank:</span>
-                    <strong className="text-slate-900">{selectedProofInvoice.paymentBankSender || selectedProofInvoice.paymentMethod || 'Transfer Bank BRI / BSI'}</strong>
-                  </div>
-
-                  <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
-                    <span className="text-slate-500">Nama Pengirim:</span>
-                    <strong className="text-slate-900">{selectedProofInvoice.paymentSenderName || 'Wali Santri'}</strong>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Waktu Bayar:</span>
-                    <span className="text-slate-700">{selectedProofInvoice.paymentDate || '21 Juli 2026 14:20 WIB'}</span>
+                    {selectedProofInvoice.paymentNotes && (
+                      <div className="pt-1 text-[11px] text-slate-600">
+                        <span className="text-slate-500 block">Catatan Transfer Wali:</span>
+                        <p className="italic bg-white p-2 rounded-lg border border-slate-200 mt-1 text-slate-800">{selectedProofInvoice.paymentNotes}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
-                {selectedProofInvoice.paymentNotes && (
-                  <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 text-[11px]">
-                    <strong>Catatan Wali Santri:</strong> {selectedProofInvoice.paymentNotes}
+                {/* Section Siswa & Tagihan */}
+                <div>
+                  <h4 className="text-xs font-black text-slate-800 uppercase tracking-wide border-b border-slate-200 pb-1 mb-2">
+                    Detail Siswa &amp; Tagihan SPP
+                  </h4>
+
+                  <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2 font-medium">
+                    <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
+                      <span className="text-slate-500">Nama Siswa:</span>
+                      <strong className="text-slate-900">{selectedProofInvoice.studentName}</strong>
+                    </div>
+
+                    <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
+                      <span className="text-slate-500">NIS / Kelas:</span>
+                      <strong className="text-slate-900">{selectedProofInvoice.nis} • {selectedProofInvoice.classGrade}</strong>
+                    </div>
+
+                    <div className="flex justify-between border-b border-slate-200/80 pb-1.5">
+                      <span className="text-slate-500">Jenis &amp; Periode:</span>
+                      <strong className="text-slate-900">{selectedProofInvoice.feeType} ({selectedProofInvoice.monthPeriod})</strong>
+                    </div>
+
+                    <div className="flex justify-between pt-1 items-center">
+                      <span className="text-slate-700 font-bold">Total Nominal:</span>
+                      <strong className="text-emerald-700 font-black text-base">Rp {selectedProofInvoice.amount.toLocaleString('id-ID')}</strong>
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
             </div>
 
-            {/* Action Buttons */}
+            {/* Footer Action Buttons */}
             <div className="pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <button
-                type="button"
-                onClick={() => window.print()}
-                className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center justify-center gap-2 cursor-pointer transition"
-              >
-                <Printer className="w-4 h-4 text-slate-600" /> Cetak Lembar Audit
-              </button>
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={() => window.print()}
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs flex items-center justify-center gap-2 cursor-pointer transition shadow-md"
+                >
+                  <Printer className="w-4 h-4 text-emerald-400" /> Cetak Kuitansi PDF
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    const msg = `Halo Bapak/Ibu Wali dari ${selectedProofInvoice.studentName}, Kuitansi Resi Pembayaran SPP bulan ${selectedProofInvoice.monthPeriod} sejumlah Rp ${selectedProofInvoice.amount.toLocaleString('id-ID')} telah LUNAS terverifikasi oleh Bendahara SMK Islam Cipasung. No. Resi: ${selectedProofInvoice.receiptNo || 'KWT/2026/07/001'}. Terima kasih.`;
+                    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+                  }}
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-950 font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer transition border border-emerald-300"
+                >
+                  <Send className="w-4 h-4 text-emerald-700" /> WhatsApp Wali
+                </button>
+              </div>
 
               <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                 {selectedProofInvoice.status !== 'Lunas' && (
@@ -3381,8 +3515,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     type="button"
                     onClick={() => {
                       onUpdateInvoiceStatus(selectedProofInvoice.id, 'Lunas', selectedProofInvoice.paymentMethod || 'Verifikasi Admin Bukti Transfer');
-                      setSelectedProofInvoice(null);
-                      alert(`✓ Pembayaran SPP ${selectedProofInvoice.studentName} Berhasil Diverifikasi LUNAS!`);
+                      setSelectedProofInvoice({
+                        ...selectedProofInvoice,
+                        status: 'Lunas',
+                      });
+                      alert(`✓ Pembayaran SPP ${selectedProofInvoice.studentName} Berhasil Diverifikasi LUNAS & Kuitansi Diterbitkan!`);
                     }}
                     className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs flex items-center justify-center gap-1.5 shadow-md cursor-pointer transition"
                   >
@@ -3393,7 +3530,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedProofInvoice(null)}
-                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs cursor-pointer"
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs cursor-pointer border border-slate-300"
                 >
                   Tutup
                 </button>

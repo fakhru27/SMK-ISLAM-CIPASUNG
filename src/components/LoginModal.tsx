@@ -208,11 +208,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        className="relative w-full max-w-2xl p-[2px] rounded-3xl my-auto overflow-hidden shadow-2xl shadow-amber-500/20 group"
+        className="relative w-full max-w-2xl p-[2px] bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-400 rounded-3xl my-auto shadow-2xl shadow-amber-500/20 group"
       >
-        {/* Rotating Color Beam Edge Animation */}
-        <div className="absolute inset-[-250%] animate-spin-border bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_60%,#f59e0b_75%,#fef08a_88%,#ffffff_100%)] pointer-events-none opacity-90" />
-
         <div className="relative w-full bg-slate-900 rounded-[22px] p-6 sm:p-8 text-slate-100 overflow-hidden">
           {/* Background glow */}
           <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />

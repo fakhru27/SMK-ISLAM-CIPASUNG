@@ -130,13 +130,10 @@ export const CampusSlideShow: React.FC<CampusSlideShowProps> = ({ onOpenPpdb }) 
     <div className="bg-slate-950 py-3 sm:py-4 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div
-          className="relative group p-[1.5px] rounded-3xl overflow-hidden shadow-2xl"
+          className="relative group p-[2px] bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-400 rounded-3xl shadow-2xl"
           onMouseEnter={() => setIsAutoPlay(false)}
           onMouseLeave={() => setIsAutoPlay(true)}
         >
-          {/* Animated Rotating Border Beam */}
-          <div className="absolute inset-[-250%] animate-spin-border bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_60%,#f59e0b_75%,#38bdf8_85%,#fef08a_95%,#ffffff_100%)] pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity" />
-
           {/* Inner Slide Box with Taller Downward Height */}
           <div className="relative z-10 bg-slate-950 rounded-[22px] overflow-hidden h-[450px] sm:h-[580px] md:h-[660px] lg:h-[720px] flex items-end">
             {/* Active Image Slide with Motion */}

@@ -23,6 +23,8 @@ import {
 import { LogoYayasan, LogoSmk } from './Logos';
 import { UserSession } from './LoginModal';
 
+import { SchoolInfoData } from '../types';
+
 interface HeaderProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
@@ -32,6 +34,7 @@ interface HeaderProps {
   currentUser: UserSession;
   onOpenLoginModal: () => void;
   onLogout?: () => void;
+  schoolInfo?: SchoolInfoData;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -43,6 +46,7 @@ export const Header: React.FC<HeaderProps> = ({
   currentUser,
   onOpenLoginModal,
   onLogout,
+  schoolInfo,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
@@ -170,7 +174,7 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Top Banner Bar (Refined Slate & Warm Gold Accent) */}
       <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 px-4 sm:px-8 py-1.5 text-xs text-slate-200 flex flex-wrap justify-between items-center border-b border-slate-800 gap-2">
         <div className="flex items-center space-x-3">
-          <LogoSmk size={20} showText={true} lightText={true} />
+          <LogoSmk size={20} showText={true} lightText={true} logoUrl={schoolInfo?.logoUrl} />
           <span className="hidden sm:inline text-slate-700">|</span>
           <span className="flex items-center gap-1.5 font-semibold text-amber-300">
             <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
@@ -200,7 +204,7 @@ export const Header: React.FC<HeaderProps> = ({
           onClick={() => handleNavClick('beranda')}
           className="flex items-center gap-3 cursor-pointer group py-1 shrink-0"
         >
-          <LogoSmk size={44} showText={true} lightText={false} />
+          <LogoSmk size={44} showText={true} lightText={false} logoUrl={schoolInfo?.logoUrl} />
         </div>
 
         {/* Desktop Navigation & Action Bar with Clean Spacing & Zero Overlap */}
